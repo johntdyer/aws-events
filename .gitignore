@@ -2,3 +2,4 @@ config.toml
 debug
 aws-events
 database/ledis/*
+packages/aws-events_*

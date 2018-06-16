@@ -11,19 +11,8 @@ LDFLAGS=-ldflags "-X main.Build=`git rev-parse HEAD`"
 
 packages/$(BINARY): $(SOURCES)
 		gox \
-		-osarch="!darwin/386"    \
-		-osarch="!linux/386"     \ 
-		-osarch="!openbsd/386"   \
-		-osarch="!openbsd/amd64" \
-		-osarch="!freebsd/amd64" \
-		-osarch="!freebsd/arm"   \
-		-osarch="!freebsd/386"   \
-		-osarch="!windows/386"   \
-		-osarch="!windows/amd64" \
-		-osarch="!linux/arm"     \
-		-osarch="!netbsd/arm"    \
-		-osarch="!netbsd/386"    \
-		-osarch="!netbsd/amd64"  \
+		-osarch="linux/amd64"    \
+		-osarch="darwin/amd64" \
 		${LDFLAGS}               \
 		-output packages/{{.Dir}}_{{.OS}}_v${VERSION}_{{.Arch}}
 
