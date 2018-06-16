@@ -1,4 +1,4 @@
-## AWS Eventer
+## AWS Event Tool
 
 
 ### Purpose
@@ -7,6 +7,10 @@ This tool is designed to be run in a cron and detected instance events.  When ev
 
 ### Building
 
+```bash
+dep ensure
+make
+```
 
 #### Features:
 
