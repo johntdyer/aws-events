@@ -5,6 +5,14 @@
 
 This tool is designed to be run in a cron and detected instance events.  When events are detected a JIRA issue is opened up
 
+### Use
+
+```bash
+cp config-example.toml config.toml
+# edit config file
+./aws-event
+```
+
 ### Building
 
 ```bash
