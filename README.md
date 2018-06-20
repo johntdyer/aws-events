@@ -28,17 +28,17 @@ By default the application will check all regions, however you can pass one or m
 ### Supported Config Options
 
 | Config | Purpose | Environment Variable | Default |
-|---------|---------|---------|---------|---------|
+| --------- |--------- |--------- |--------- |
 | application.log_level | Set application log level, supported options are debug, warn, error, fatal | AWS_EVENT_LOG_LEVEL |  info |
 | jira.protocol  | Protocol to use, http or https | AWS_EVENT_JIRA_PROTOCOL | https | 
 | jira.port  | Jira server port | AWS_EVENT_JIRA_PORT | 443 | 
 | jira.host  | Jira server hostname | AWS_EVENT_JIRA_HOST | "jira-eng-gpk2.example.com" | 
 | jira.path  | Jira server bath path | AWS_EVENT_JIRA_PATH | /jira |
-|jira.environmentPriorityMapping | Mapping between environment and issue priority | | production = "P1" <br/> integration = "P2"<br/> default    = "P3" <br/> | 
-|aws.profileName | aws config profilee name |  AWS_EVENT_AWS_PROFILE_NAME | sparkdev |
+| jira.environmentPriorityMapping | Mapping between environment and issue priority | | production = "P1" <br/> integration = "P2"<br/> default    = "P3" <br/> | 
+| aws.profileName | aws config profilee name |  AWS_EVENT_AWS_PROFILE_NAME | sparkdev |
 | ledis.path | Path to database file for state |  AWS_EVENT_LEDIS_PATH | "./database/ledis | 
-|ledis.database | Database to use, suggest never changing this | AWS_EVENT_LEDIS_DATABASE | 0 |
-|ledis.key_expire_time | Time ( in seconds ) to expire keys in k/v data store, default is 60 days | AWS_EVEMNT_LEDIS_KEY_EXPIRE_TIME | 5184000 |
+| ledis.database | Database to use, suggest never changing this | AWS_EVENT_LEDIS_DATABASE | 0 |
+| ledis.key_expire_time | Time ( in seconds ) to expire keys in k/v data store, default is 60 days | AWS_EVEMNT_LEDIS_KEY_EXPIRE_TIME | 5184000 |
 
 ### Building
 
