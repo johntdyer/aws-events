@@ -1,7 +1,7 @@
-## AWS Event Tool
+# AWS Event Tool
 
 
-### Purpose
+## Purpose
 
 This tool is designed to be run in a cron and detected instance events.  When events are detected a JIRA issue is opened up
 
@@ -9,13 +9,37 @@ Example:
 
 ![Ticket Example](contrib/example.png?v=4&s=200)
 
-### Use
+## Use
 
 ```bash
 cp config-example.toml config.toml
 # edit config file
 ./aws-events
 ```
+
+The minimal IAM permissions required to run the app are below.  
+
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeInstances",
+                "ec2:DescribeRegions",
+                "ec2:DescribeInstanceStatus"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+It is strongly recommended you create a user with only these permissions rather then using your personal keys
+
 
 #### Flags
 
@@ -25,7 +49,7 @@ By default the application will check all regions, however you can pass one or m
 ./aws-events --region us-east-1 --region us-east-2
 ```
 
-### Supported Config Options
+##### Supported Config Options
 
 | Config | Purpose | Environment Variable | Default |
 | --------- |--------- |--------- |--------- |
@@ -40,14 +64,15 @@ By default the application will check all regions, however you can pass one or m
 | ledis.database | Database to use, suggest never changing this | AWS_EVENT_LEDIS_DATABASE | 0 |
 | ledis.key_expire_time | Time ( in seconds ) to expire keys in k/v data store, default is 60 days | AWS_EVEMNT_LEDIS_KEY_EXPIRE_TIME | 5184000 |
 
-### Building
+## Building
 
 ```bash
 dep ensure
 make
 ```
 
-#### Features:
+
+## Features:
 
 * Mapping of enviromnment to JIRA issue priority.  Example integration is P4 and production is P3.
 * Configurable JIRA Server, Issue type, Issue Project
