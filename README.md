@@ -28,7 +28,7 @@ By default the application will check all regions, however you can pass one or m
 ### Supported Config Options
 
 | Config | Purpose | Environment Variable | Default |
----------|---------|---------|---------|---------|
+|---------|---------|---------|---------|---------|
 | application.log_level | Set application log level, supported options are debug, warn, error, fatal | AWS_EVENT_LOG_LEVEL |  info |
 | jira.protocol  | Protocol to use, http or https | AWS_EVENT_JIRA_PROTOCOL | https | 
 | jira.port  | Jira server port | AWS_EVENT_JIRA_PORT | 443 | 
