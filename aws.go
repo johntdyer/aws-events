@@ -10,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// getInstanceTagValue - Get the string value for a given tag
 func getInstanceTagValue(inst *ec2.Instance, name string, missingValue string) string {
 	for _, tag := range inst.Tags {
 		if (name != "") && (*tag.Key == name) {
@@ -77,11 +78,6 @@ func getInstanceData(awsRegion string, instanceID string) (*ec2.Instance, error)
 		}).Error(fmt.Printf("there was an error listing instances in %s", err.Error()))
 	}
 
-	// log.WithFields(log.Fields{
-	// 	"instanceID": instanceID,
-	// 	"awsProfile": application.Config.AWS.Profile,
-	// 	"awsRegion":  awsRegion,
-	// }).Debug("Found instance data")
 	return resp.Reservations[0].Instances[0], nil
 }
 
@@ -153,6 +149,11 @@ func processInstance(resp *ec2.DescribeInstanceStatusOutput, awsRegion string) {
 				}
 
 				_, err = application.DB.HSet([]byte(*instance.InstanceId), []byte("issue"), []byte(issueKey))
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				_, err = application.DB.HExpire([]byte(*instance.InstanceId), application.Config.Ledis.KeyTimeExpireInSeconds)
 				if err != nil {
 					log.Fatal(err)
 				}

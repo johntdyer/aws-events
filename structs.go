@@ -10,6 +10,7 @@ type app struct {
 	// DB *badger.DB
 	DB     *ledis.DB
 	Config *appConfig.Configuration
+	
 }
 
 type issue struct {

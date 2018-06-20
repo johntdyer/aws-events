@@ -1,7 +1,7 @@
 # Options are debug, warn, error, fatal
 # AWS_EVENT_LOG_LEVEL
 [application]
-    log_level = "debug"
+    log_level = "info"
 
 [jira]
     # AWS_EVENT_JIRA_PROTOCOL
@@ -9,7 +9,7 @@
     # AWS_EVENT_JIRA_PORT
     port = 443
     # AWS_EVENT_JIRA_HOST
-    host = "jira-eng-gpk2.cisco.com"
+    host = "jira-server.com"
     # AWS_EVENT_JIRA_PATH
     path = "/jira"
     username = "xxxxx"
@@ -17,10 +17,11 @@
 
 [aws]
     # AWS_EVENT_AWS_PROFILE_NAME
-    profileName = "sparkdev"
+    profileName = "development"
 
 [ledis]
     # AWS_EVENT_LEDIS_PATH
     path = "./database/ledis"
     # AWS_EVENT_LEDIS_DATABASE
     database = 0
+    key_expire_time = 5184000

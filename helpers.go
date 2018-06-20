@@ -2,6 +2,7 @@ package main
 
 import (
 	"regexp"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -15,6 +16,18 @@ import (
 // 	}
 // 	return s[0], s[1], nil
 // }
+
+// Used to support multiple --region flags and represent as slice
+type regionArrayFromFlags []string
+
+func (i *regionArrayFromFlags) String() string {
+	return strings.Join(*i, ",")
+}
+
+func (i *regionArrayFromFlags) Set(value string) error {
+	*i = append(*i, value)
+	return nil
+}
 
 func newInstanceEvent(key string, awsRegion string) (bool, error) {
 
@@ -40,8 +53,7 @@ func newInstanceEvent(key string, awsRegion string) (bool, error) {
 
 func trimEventDescription(event string, awsRegion string, instanceID string) string {
 
-	pattern := "(^\\The instance\\s)"
-	re := regexp.MustCompile(pattern)
+	re := regexp.MustCompile("(^The instance\\s)")
 
 	// Do we have a match ?
 	matched := re.MatchString(event)

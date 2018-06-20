@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/andygrunwald/go-jira"
@@ -69,6 +70,7 @@ func buildInstanceTicket(event ec2.InstanceStatusEvent, instance ec2.InstanceSta
 	return issue
 }
 
+// Based on the environment it sets the priority
 func getPriority(env string) *jira.Priority {
 
 	switch env {
@@ -88,6 +90,13 @@ func getPriority(env string) *jira.Priority {
 }
 
 func createJiraIssue(anIssue *issue) string {
+
+	requestLogger := log.WithFields(log.Fields{
+		"instanceID": anIssue.InstanceID,
+		"awsProfile": application.Config.AWS.Profile,
+		"awsRegion":  anIssue.awsRegion,
+	})
+
 	base := application.Config.Jira.Protocol + "://" +
 		application.Config.Jira.Host +
 		application.Config.Jira.Path
@@ -123,39 +132,24 @@ func createJiraIssue(anIssue *issue) string {
 		},
 	}
 	issue, response, err := jiraClient.Issue.Create(&i)
-	log.WithFields(log.Fields{
-		"instanceID": anIssue.InstanceID,
-		"awsProfile": application.Config.AWS.Profile,
-		"awsRegion":  anIssue.awsRegion,
-	}).Debug(fmt.Printf("%+v", &i))
+	// log.WithFields(log.Fields{
+	// 	"instanceID": anIssue.InstanceID,
+	// 	"awsProfile": application.Config.AWS.Profile,
+	// 	"awsRegion":  anIssue.awsRegion,
+	// }).Debug(fmt.Printf("%+v", &i))
 
 	if err != nil {
-
-		log.WithFields(log.Fields{
-			"instanceID": anIssue.InstanceID,
-			"awsProfile": application.Config.AWS.Profile,
-			"awsRegion":  anIssue.awsRegion,
-		}).Error(err)
+		requestLogger.Error("'" + err.Error() + "'")
+		os.Exit(2)
 	}
 
 	bodyBytes, _ := ioutil.ReadAll(response.Body)
 
 	if response.StatusCode != 201 {
-		log.WithFields(log.Fields{
-			"instanceID":   anIssue.InstanceID,
-			"awsProfile":   application.Config.AWS.Profile,
-			"awsRegion":    anIssue.awsRegion,
-			"responseCode": response.Status,
-		}).Warn("Body: " + string(bodyBytes))
 
+		requestLogger.Warnf("Response Code: [%d], Respomnse body: %s", response.StatusCode, string(bodyBytes))
 	} else {
-		log.WithFields(log.Fields{
-			"instanceID":   anIssue.InstanceID,
-			"awsProfile":   application.Config.AWS.Profile,
-			"awsRegion":    anIssue.awsRegion,
-			"JiraKey":      issue.Key,
-			"responseCode": response.StatusCode,
-		}).Debug("Body: " + string(bodyBytes))
+		requestLogger.Infof("Issue created: %s://%s/%s/browse/%s", application.Config.Jira.Protocol, application.Config.Jira.Host, application.Config.Jira.Path, issue.Key)
 	}
 
 	return issue.Key

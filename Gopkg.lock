@@ -44,6 +44,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/coduno/netrc"
+  packages = ["."]
+  revision = "8560df9760ef51c08d0cbf75190b799ca4d3bf69"
+
+[[projects]]
+  branch = "master"
   name = "github.com/cupcake/rdb"
   packages = [
     ".",
@@ -284,6 +290,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6bbf52857a0e89364d708485b7ac73261f1a79cf2d8ec411d64b162555d5b08f"
+  inputs-digest = "362480242a1bc52bc6c638dcb2069c722ecdaa7873255df040ef71835ca4f5e3"
   solver-name = "gps-cdcl"
   solver-version = 1
