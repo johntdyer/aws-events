@@ -20,6 +20,16 @@ func tagsToJiraIssue(instance *ec2.Instance) string {
 	return strings.Join(arr, "\n")
 }
 
+// securityGroupsToJiraIssue returns jiira formatted table of security groups for an instance
+func securityGroupsToJiraIssue(instance *ec2.Instance) string {
+	arr := []string{"||Name || Group Id ||"}
+
+	for _, g := range instance.SecurityGroups {
+		arr = append(arr, "| "+*g.GroupName+" | "+*g.GroupId+" |")
+	}
+	return strings.Join(arr, "\n")
+}
+
 func buildInstanceTicket(event ec2.InstanceStatusEvent, instance ec2.InstanceStatus, region string) *issue {
 	instanceData, err := getInstanceData(region, *instance.InstanceId)
 	if err != nil {
@@ -45,8 +55,12 @@ func buildInstanceTicket(event ec2.InstanceStatusEvent, instance ec2.InstanceSta
 	// Build issue description
 	desciption := "[Event Panel|https://" + region + ".console.aws.amazon.com/ec2/v2/home?region=" + region + "#Events]\n\n-------\n\n" +
 		"|| || ||\n" +
-		"| Instance Name | [" + instanceName + "|https://" + region + ".console.aws.amazon.com/ec2/v2/home?region=" + region + "#Instances:tag:Name=" + instanceName + "] |\n" +
-		"| Instance | [" + *instance.InstanceId + "|https://" + region + ".console.aws.amazon.com/ec2/v2/home?region=" + region + "#Instances:instanceId=" + *instance.InstanceId + "]\n" +
+		"| **Instance Name** | [" + instanceName + "|https://" + region + ".console.aws.amazon.com/ec2/v2/home?region=" + region + "#Instances:tag:Name=" + instanceName + "] |\n" +
+		"| **Instance** | [" + *instance.InstanceId + "|https://" + region + ".console.aws.amazon.com/ec2/v2/home?region=" + region + "#Instances:instanceId=" + *instance.InstanceId + "]\n" +
+		"| **Instance Type** | " + *instanceData.InstanceType + "|\n" +
+		"| Security Groups | {panel}\n" +
+		securityGroupsToJiraIssue(instanceData) +
+		"|{panel}|\n" +
 		"| Region | [" + region + "|https://console.aws.amazon.com/ec2/v2/home?region=" + region + "#/home]\n" +
 		"| State | " + *instance.InstanceState.Name + "|\n" +
 		"| Instance Status | " + *instance.InstanceStatus.Status + "|\n" +
