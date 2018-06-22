@@ -122,7 +122,7 @@ func processInstance(resp *ec2.DescribeInstanceStatusOutput, awsRegion string) {
 						"instanceID": *instance.InstanceId,
 						"awsProfile": application.Config.AWS.Profile,
 						"awsRegion":  awsRegion,
-					}).Warn("Maintance completed")
+					}).Warn("Maintance completed, no ticket to create")
 					break
 				}
 
