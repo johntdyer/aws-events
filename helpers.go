@@ -43,7 +43,7 @@ func newInstanceEvent(key string, awsRegion string) (bool, error) {
 			"instanceID": string(key),
 			"awsProfile": application.Config.AWS.Profile,
 			"awsRegion":  awsRegion,
-		}).Info("Found new instance event")
+		}).Info("Detected instance event")
 		return true, nil
 	}
 
