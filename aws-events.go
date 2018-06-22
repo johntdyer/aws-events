@@ -14,6 +14,7 @@ import (
 var (
 	application     = &app{}
 	regionListFlags regionArrayFromFlags
+	configPath      = ""
 )
 
 // var application = &app{}
@@ -45,8 +46,10 @@ func main() {
 	log.Info("Starting event alerter")
 
 	flag.Var(&regionListFlags, "region", "Check a single region.  Optional, default is to check all regions.")
+	config := flag.String("config", ".", "Define a config file to use")
 	flag.Parse()
-
+	configPath = *config
+	// fmt.Println(*configFile)
 	// Get region list
 	// If user passes a list of regions we'll use that otherwise we'll check all
 	var regionList []string

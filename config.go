@@ -35,9 +35,23 @@ func validateAndParseLogLevel(level string) {
 
 // Set my defaults
 func setMyDefaults(v *viper.Viper) {
-	v.SetConfigName("config")
-	v.AddConfigPath(".")
 
+	v.SetConfigName("config")
+
+	// if configPath == "" {
+	// 	v.AddConfigPath(".")
+	// } else {
+
+	v.SetConfigType("toml")
+
+	v.SetConfigName("config")
+
+	v.AddConfigPath("./config.toml")
+	v.AddConfigPath("./config-mount")
+
+	// fmt.Println(configPath)
+	v.AddConfigPath(configPath)
+	// }
 	// Set defaults
 	v.SetEnvPrefix("AWS_EVENT") // will be uppercased automatically
 	v.AutomaticEnv()
@@ -75,22 +89,28 @@ func (app *app) loadConfig() {
 	}
 
 	validateAndParseLogLevel(configuration.Application.LogLevel)
+	app.Config = &configuration
 
 	nc, err := netrc.Parse()
 	if err != nil {
 		log.Error(err)
 	}
-	app.Config = &configuration
 
 	// Read credentials from netrc if they are not set in config
-	if app.Config.Jira.Password == "" {
+	// required to read in from env
+	app.Config.Jira.Password = v.GetString("Jira.Password")
+	app.Config.Jira.Username = v.GetString("Jira.Username")
+
+	if v.GetString("Jira.Password") == "" {
+		log.Debug("Using netrc for password")
 		app.Config.Jira.Password = nc[app.Config.Jira.Host].Password
 		if nc[app.Config.Jira.Host].Login == "" {
 			log.Fatal("Jira username required")
 		}
 	}
 
-	if app.Config.Jira.Username == "" {
+	if v.GetString("Jira.Username") == "" {
+		log.Debug("Using netrc for username")
 		app.Config.Jira.Username = nc[app.Config.Jira.Host].Login
 		if nc[app.Config.Jira.Host].Login == "" {
 			log.Fatal("Jira password required")
