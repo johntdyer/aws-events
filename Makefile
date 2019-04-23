@@ -3,18 +3,14 @@ SOURCES := $(shell find $(SOURCEDIR) -name '*.go')
 
 BINARY=aws-event-monitor
 
-VERSION=0.0.1
+VERSION=0.0.2
 
-LDFLAGS=-ldflags "-X main.Build=`git rev-parse HEAD`"
+LDFLAGS=-ldflags "-X main.Build=`git rev-parse HEAD` -a -installsuffix cgo"
 
 .DEFAULT_GOAL: $(BINARY)
 
 packages/$(BINARY): $(SOURCES)
-		gox \
-		-osarch="linux/amd64"    \
-		-osarch="darwin/amd64" \
-		${LDFLAGS}               \
-		-output packages/{{.Dir}}_{{.OS}}_v${VERSION}_{{.Arch}}
+		CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ./packages/aws-events_v${VERSION}
 
 .PHONY: clean
 clean:
